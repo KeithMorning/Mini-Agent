@@ -1,0 +1,41 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "bun",
+      "request": "launch",
+      "name": "Bun: 运行当前文件",
+      "program": "${file}",
+      "cwd": "${workspaceFolder}",
+      "stopOnEntry": false,
+      "watchMode": false
+    },
+    {
+      "type": "bun",
+      "request": "launch",
+      "name": "Bun: 运行 index.ts",
+      "program": "${workspaceFolder}/index.ts",
+      "cwd": "${workspaceFolder}",
+      "stopOnEntry": false,
+      "watchMode": false
+    },
+    {
+      "type": "bun",
+      "request": "launch",
+      "name": "Bun: 监听模式 (--watch)",
+      "program": "${workspaceFolder}/index.ts",
+      "cwd": "${workspaceFolder}",
+      "stopOnEntry": false,
+      "watchMode": true
+    },
+    {
+      "type": "bun",
+      "request": "launch",
+      "name": "Bun: 测试当前文件",
+      "runtime": "bun",
+      "runtimeArgs": ["test", "${file}"],
+      "program": "",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}

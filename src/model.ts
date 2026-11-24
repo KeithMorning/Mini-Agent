@@ -7,19 +7,32 @@ export class MockModel implements Model {
 				type:"action",
 				action:{
 					tool:"calculate",
-					input:{a:12,b:8}
+					input:{a:10,b:290}
 				}
 			}
 		}
 
 		const last = state.history.at(-1);
-		if(!last?.observation.success){
-			return {
-				type: "finish",
-				answer: "Calculation failed."
+		if(last?.type === "tool_result"){
+			if(!last.observation.success){
+				return {
+					type: "finish",
+					output:{answer: "Calculation failed.",result:null}
+				}
 			}
+			return {
+				type:"finish",
+				output:{answer:`this answer is ${last.observation.output}`,result:last.observation.output},
+			}
+
 		}
 
-		return {type:"finish",answer: `the answer is ${last.observation.output}`}
+		return {
+			type:"finish",
+			output:{answer:"No calculation result available",result:null},
+		}
+		
+
+		
 	}
 }

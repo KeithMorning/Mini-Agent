@@ -28,12 +28,17 @@ export interface Step {
 }
 
 
+export type HistoryEvent = 
+| { type:"tool_result";action:Action;observation:Observation;}
+| { type: "evaluation"; answer:string; passed:boolean; feedback:string;}
+
+
 /*
 * Agent 内部运行状态
 */
 export interface AgentState {
 	goal: string,
-	history: Step[];
+	history: HistoryEvent[];
 }
 
 
@@ -43,22 +48,31 @@ export interface AgentState {
 
 export type Decision =
  | {type:"action",action:Action}
- | {type:"finish",answer:string};
+ | {type:"finish",output:{answer:string,result:unknown}};
 
 /**
  * 模型适配的接口 
 */
 
 export interface Model {
-	decide(state: AgentState):Promise<Decision>
+	decide(state: AgentState,tools:ToolSchema[]):Promise<Decision>
 }
 
 /**
  * 工具接口
 */
 
-export interface Tool {
-	name: string;
-	description:string;
+export interface Tool extends ToolSchema{
 	execute(input: unknown): Promise<Observation>
+}
+
+
+/**
+ * Tools 定义集合
+*/
+
+export interface ToolSchema {
+	name:string;
+	description:string;
+	parameters:Record<string,unknown>;
 }

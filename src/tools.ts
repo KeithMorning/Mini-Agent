@@ -28,3 +28,21 @@ export const calculate: Tool = {
 		return {success:true,output:input.a + input.b}
 	}
 }
+
+
+export const TestTool:Tool = {
+	name: "echo_hello_test",
+	description:"You can use this for test for tools",
+	parameters:{
+		type:"object",
+		properties:{
+			input:{type:"string"}
+		},
+	},
+	async execute(input:unknown){
+		if(typeof(input) === "string" && input !== null && input.length > 0){
+			return {success:true,output:input}
+		}
+		return {success:false,output:"invalid input or empty input"}
+	}
+}

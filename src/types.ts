@@ -5,6 +5,7 @@
  */
 
 export interface Action {
+	callId:string;
 	tool:string;
 	input:unknown;
 }
@@ -27,8 +28,21 @@ export interface Step {
 	observation: Observation;
 }
 
+export type ConversationMessage = 
+| {role: "user"; content:string;}
+| {role: "assistant";content:string| null,toolCalls?:ToolCall[];}
+| {role: "tool"; toolCallId:string;content:string;}
 
-export type HistoryEvent = 
+export type AssistantMessage = Extract<ConversationMessage,{role:"assistant"}>
+
+export interface ToolCall {
+	id:string;
+	name:string;
+	arguments:string;
+}
+
+
+export type ExecuteHistoryEvent = 
 | { type:"tool_result";action:Action;observation:Observation;}
 | { type: "evaluation"; answer:string; passed:boolean; feedback:string;}
 
@@ -38,7 +52,8 @@ export type HistoryEvent =
 */
 export interface AgentState {
 	goal: string,
-	history: HistoryEvent[];
+	executeHistory: ExecuteHistoryEvent[];
+	conversation: ConversationMessage[];
 }
 
 
@@ -47,8 +62,8 @@ export interface AgentState {
 */
 
 export type Decision =
- | {type:"action",action:Action}
- | {type:"finish",output:{answer:string,result:unknown}};
+ | {type:"action",action:Action,message:AssistantMessage}
+ | {type:"finish",output:{answer:string,result:unknown},message:AssistantMessage};
 
 /**
  * 模型适配的接口 
